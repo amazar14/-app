@@ -35,7 +35,7 @@ export default {
     .swiper-wrapper
       width 100%
       li
-        margin 0 0 10px 0
+        margin 0 0 1.5vh 0
         display flex
         align-items center
         // position relative
@@ -48,16 +48,16 @@ export default {
           width 70%
           margin-left 10px
           color #eee
-          font-size 16px
+          font-size 2vh
           display flex
           flex-direction column
           justify-content space-evenly
           p
             .singer
               color #aeaeae
-              font-size 14px
+              font-size 1.7vh
           .album
-            font-size 14px
+            font-size 1.7vh
             color #aeaeae
         .play
           display inline-block

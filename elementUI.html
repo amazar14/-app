@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" name='viewport'>
+	<title>Document</title>
+	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.13.2/lib/theme-chalk/index.css">
+	<!-- <link rel="stylesheet" href="el.css"> -->
+
+	<style>
+		.el-row{
+			margin-bottom: 20px;
+			/* &:last-child{
+				margin-bottom: 0;
+			} */
+		}
+		.el-col{
+			border-radius: 4px;
+		}
+		.grid-content{
+			border-radius: 4px;
+			min-height: 36px;
+		}
+		.bg-purple{
+			background-color: #99a9bf;
+		}
+		.bg-purple-light{
+			background-color: #e5e9f2;
+		}
+		.bg-purple-dark{
+			background-color: #d3dce6;
+		}
+	</style>
+</head>
+<body>
+	<a href="tel: 123456">123456</a>
+	<div id="app">
+		<el-button @click='visible=!visible'>button</el-button>
+
+		<el-dialog :visible.sync="visible" :before-close='handleClose' title='Hello world'>
+			<p>123</p>
+		</el-dialog>
+
+		<el-row :gutter='10'>
+			<el-col :span='6'> <div class="grid-content bg-purple"></div></el-col>
+			<el-col :span='4'> <div class="grid-content bg-purple-light"></div></el-col>
+			<el-col :offset='4' :span='4'> <div class="grid-content bg-purple-dark"></div></el-col>
+		</el-row>
+		<el-row type='flex' justify='space-around'>
+			<el-col :span='6'> <div class="grid-content bg-purple"></div></el-col>
+			<el-col :span='4'> <div class="grid-content bg-purple-light"></div></el-col>
+			<el-col :span='4'> <div class="grid-content bg-purple-dark"></div></el-col>
+		</el-row>
+		<el-row type='flex' justify='space-around'>
+			<el-col :xs='8' :sm='6' :md='4' :lg='3' :xl='2'><div class="grid-content bg-purple"></div></el-col>
+			<el-col :span='4'> <div class="grid-content bg-purple-light"></div></el-col>
+			<el-col :span='4'> <div class="grid-content bg-purple-dark"></div></el-col>
+		</el-row>
+		<el-button-group>
+			<el-button type='success' plain size='medium'>button</el-button>
+			<el-button plain type="success" icon='el-icon-arrow-left'>left</el-button>
+		</el-button-group>
+		<i class='el-icon-share'></i>
+		<i class="el-icon-close"></i>
+		<el-link type='primary' :underline='false' icon='el-icon-arrow-left'>链接</el-link>
+		<el-link type='primary' :underline='false'>链接<i class="el-icon-arrow-up"></i></el-link>
+
+		<el-radio-group v-model='radio' text-color='#ffffff' :disabled='false'>
+		 <el-radio-button plain label='1' border>选项一</el-radio-button plain> 
+		 <el-radio-button plain label='2' border>选项二</el-radio-button plain>
+		</el-radio-group>
+		<el-tooltip placement='top' content='top center' effect='dark'>
+			<el-button @click='dialogVisible = !dialogVisible'>button</el-button>
+		</el-tooltip>
+		
+		<el-dialog title='TITLE' :visible.sync='dialogVisible' :before-close='handleClose'>
+			<span> information</span>
+			<span slot='footer'>
+				<el-button plain @click='dialogVisible=false'>取消</el-button>
+				<el-button plain type='primary' @click='dialogVisible=false'>确认</el-button>
+			</span>
+		</el-dialog>
+		<el-breadcrumb separator-class='el-icon-arrow-right'>
+			<el-breadcrumb-item to='javascript:;'>一</el-breadcrumb-item>
+			<el-breadcrumb-item to='javascript:;'>二</el-breadcrumb-item>
+			<el-breadcrumb-item>三</el-breadcrumb-item>
+		</el-breadcrumb>
+		<el-transfer :data='data' v-model='value' filterable>
+			
+		</el-transfer>
+		<el-input-number v-model='num' :max='10' :step='2' size='mini' :precision='1' controls-position='right'></el-input-number>
+
+		<el-menu class='el-menu-demo' 
+			mode='horizontal'
+			background-color="#545c64" 
+			active-text-color="#ffd04b"
+			text-color='#fff'
+			:default-active='activeIndex'
+			:collapse= false
+			:unique-opened= true
+		> 
+			<el-menu-item index='1'>aaaa</el-menu-item>
+			<el-submenu index='2'>
+				<template slot='title'>bbbb</template>
+				<el-menu-item index='2-1'>b1b1b1b1</el-menu-item>
+				<el-menu-item index='2-2'>b2b2b2b2</el-menu-item>
+				<el-menu-item index='2-3'>b3b3b3b3</el-menu-item>
+				<el-menu-item index='2-4'>b4b4b4b4</el-menu-item>
+				<el-submenu index='2-5'>
+					<template slot='title'>ddddd</template>
+					<el-menu-item-group>
+						<template slot='title'>分组一</template>
+						<el-menu-item index='2-5-1'>d1d1</el-menu-item>
+						<el-menu-item index='2-5-2'>d2d2</el-menu-item>
+						<el-menu-item index='2-5-3'>d3d3</el-menu-item>
+					</el-menu-item-group>
+				</el-submenu>
+			</el-submenu>
+			<el-menu-item index='3'>ccccc</el-menu-itme>
+		</el-menu>
+		<el-rate v-model='star.val' :colors='star.colors' :allow-half=true>
+		</el-rate>
+	</div>
+
+
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/element-ui@2.13.2/lib/index.js"></script>
+	<script>
+		let app = new Vue({
+			el: "#app",
+			data(){
+				return{
+					activeIndex: '1',
+					num:2,
+					visible: false,
+					dialogVisible: false,
+					radio: '1',
+					value:[],
+					data:[{
+						key: 1,
+						label: '选项一'
+					},
+					{
+						key: 2,
+						label: '选项二'
+					},
+					{
+						key: 3,
+						label: '选项三'
+					}],
+					star: {
+						val: null,
+						colors: ['red','greed','blue']
+					}
+				}
+			},
+			methods:{
+				handleClose(done){
+					console.log(done)
+					// done()
+					this.$confirm('确认关闭？???')
+          .then(_ => {
+            done();
+          }).catch(_ => {});
+				}
+			}
+		})
+		Function.prototype.mycall = function(){
+			let thisarg = arguments[0] || window
+			this(thisarg)
+		}
+		function add(obj){
+			console.log(obj.val+1)
+		}
+		let obj = {
+			val: 3
+		}
+
+		add.mycall(obj,2)
+	</script>
+</body>
+</html>

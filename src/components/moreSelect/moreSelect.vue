@@ -1,5 +1,5 @@
 <template>
-<!-- <keep-alive> -->
+
   <div class="more-select">
     <div class="back" @click='$emit("hide")'></div>
     <div class='contain'>
@@ -34,7 +34,7 @@
       <!-- <router-view name= 'moreto'></router-view> -->
     </transition>
   </div>
-  <!-- </keep-alive> -->
+
 </template>
 
 <script>
@@ -63,17 +63,12 @@
       }
     },
     methods:{
-      print(){
-        console.log('离开了了')
-      },
       _songDetail(){  //获取歌曲信息  created执行
-        console.log(this.$route.params)
-        getSongDetail(this.id).then((res)=>{this.song = res.data.songs[0];console.log("歌曲",this.song)})
-        getComment(this.id).then((res)=>{this.comment = res;console.log("评论:",res)})
+        getSongDetail(this.id).then((res)=>{this.song = res.data.songs[0]})
+        getComment(this.id).then((res)=>{this.comment = res})
         // getSingerDetail(this.song.id).then((res)=>{this.setSinger(res.data.artist)})
       },
       commentDetail(){            //将评论传到vuex
-        console.log('push')
         this.$router.push({   //跳转评论路由
           name: `${this.type}Comment`,
           params:{
@@ -85,12 +80,7 @@
         this.setSong(this.song)
       },
       singerDetail(id,ids){
-        console.log(this.song)
-        console.log(this.$route.params)
-        console.log(this.singer.id)
-
         if(this.$route.params.type == 'singer'&&this.song.ar[0].id==this.singer.id){
-          console.log('iop')
           this.$router.back()
           return
         }
@@ -103,7 +93,7 @@
         })
       },
       albumDetail(id){      //params传入id 到album发送请求 获取专辑详细信息
-      console.log(this.$route.params)
+      // console.log(this.$route.params, this.type, id)
         this.$router.push({
           name: `${this.type}Album`,
           params:{
@@ -111,7 +101,8 @@
           }
         })
       },
-      // query用name和path都可以传参是有一个前提的，如果router/index.js下面配置的name和path是一样的
+      // query用name和path都可以传参是有一个前提的，
+      // 如果router/index.js下面配置的name和path是一样的
       // 你说的这种做法确实没有区别，但是一般他们用的是 path:'/index',name:'index'这样就不行的
       add(){
         this.addSong(this.song)
@@ -131,7 +122,6 @@
         })
       },
       id(newV){
-        console.log(newV)
         this._songDetail()
       }
     },
@@ -139,7 +129,6 @@
       ...mapGetters(["singer","type"]),
     },
     created(){
-      console.log(this.id)
         this._songDetail()
     }
   }

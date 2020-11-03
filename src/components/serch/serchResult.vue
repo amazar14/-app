@@ -70,7 +70,6 @@ import moreSelect from '../../components/moreSelect/moreSelect'
 export default {
   data(){
     return{
-      pbj: {},
       mark: 0,
       moreShow: false,
 
@@ -78,13 +77,8 @@ export default {
   },
   props:['serchResult','multimatch','word'],
   methods:{
-    print(){
-      console.log(this.pbj)
-    },
     play(id,index){
-      console.log(this.cloneResult)
       getSongDetail(id).then((res)=>{
-        console.log(res.data.songs[0])
         this.playCurrent(res.data.songs[0])
       })
     },
@@ -98,9 +92,8 @@ export default {
       })
     },
     checkAlbum(id){
-      console.log(id)
       this.$router.push({
-        name: 'album',
+        name: 'serchAlbum',
         params:{
           id: id
         }
@@ -116,7 +109,6 @@ export default {
         }
       }),
       this.setSinger(this.$props.multimatch.artist[0])
-      console.log(this.$props.multimatch)
     },
     ...mapActions(['selectPlay','playCurrent']),
     ...mapMutations({
@@ -148,13 +140,11 @@ export default {
       return this.$props.multimatch.artist[0].fansSize>100000?((this.$props.multimatch.artist[0].fansSize)/10000).toString().substring(0,(this.$props.multimatch.artist[0].fansSize/10000).toString().indexOf('.')+2)+'w':this.$props.multimatch.artist[0].fansSize
     }
   },
-  watch:{
-    serchResult: function(){
-      this.pbj = this.props
-      console.log(this.$props)
-      console.log(this.pbj)
-    }
-  },
+  // watch:{
+  //   serchResult: function(){
+  //     this.pbj = this.props
+  //   }
+  // },
   components:{
     scroll,
     moreSelect

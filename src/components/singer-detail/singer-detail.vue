@@ -66,38 +66,28 @@
       }
     },
     methods: {
-      _getDetail(){
+      _getDetail(){  //初始化拉取数据
         if(!this.singer.id){
           this.$router.push('/singer')
         }else{
           getSingerDetail(this.singer.id).then((res)=>{
-            console.log(res)
             // this.setSinger(res.data.artist)        
             this.songs = res.data.hotSongs
-            console.log(this.songs)
-            console.log(this.singer)
-            console.log(res.data.artist)
           })
           if(this.singer.accountId){
-            console.log('yonghu')
             getUserDetail(this.singer.accountId).then((res)=>{
-              console.log('用户')
-              console.log(res)
-              console.log(this.name)
               this.name[2]=this.fansStr(res.data.profile.follows)
               this.name[3]=this.fansStr(res.data.profile.followeds)
               this.user = res.data
             })
           }
-          getSingerDesc(this.singer.id).then((res)=>{
-            console.log('详细信息')
-            console.log(res)
+          getSingerDesc(this.singer.id).then((res)=>{  //描述
             this.introduction = res.data.introduction
             this.desc = res.data.briefDesc
           })
         }
       },
-      fansStr(n){
+      fansStr(n){  //粉丝数
         return n>10000?(n/10000).toFixed(1)+'万':n
       },
       scroll(posY){
@@ -120,7 +110,6 @@
       }
     },
     created() {
-      console.log(this.singer.id)
       this._getDetail()
     },
     watch:{

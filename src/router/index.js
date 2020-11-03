@@ -5,7 +5,6 @@ import Serch from '../components/serch/serch'
 import Singer from '../components/singer/singer'
 import Recommend from '../components/recommend/recommend'
 import SingerDetail from '../components/singer-detail/singer-detail'
-// import MoreSelect from '../components/moreSelect/moreSelect'
 import Comment from '../components/comment/comment'
 import musicList from '../components/musicList/musicList'
 import Album from '../components/album/album'
@@ -43,22 +42,19 @@ export default new Router({
               path: 'comment',
               name: 'recommendComment',
               component: Comment
-              // components:{
-              //   comment: Comment
-              // }
             },
-            // {
-            //   path: 'album',
-            //   name: 'recommendAlbum',
-            //   component: Album
-            // }
+            {
+              path: 'album',
+              name: 'recommendAlbum',
+              component: Album
+            }
           ],
         },
-        {
-          path: 'album',
-          name: 'recommendAlbum',
-          component: Album
-        }
+        // {
+        //   path: 'album',
+        //   name: 'recommendAlbum',
+        //   component: Album
+        // }
       ]
     },
     {
@@ -78,9 +74,6 @@ export default new Router({
               path: 'comment',
               name: 'singerComment',
               component: Comment
-              // components:{
-              //   comment: Comment
-              // }
             },
             {
               path: 'album',
@@ -117,9 +110,6 @@ export default new Router({
             path: 'comment',
             name: 'rankComment',
             component: Comment
-            // components:{
-            //   comment: Comment
-            // }
           },
           {
             path: 'album',
@@ -140,7 +130,6 @@ export default new Router({
         {
           path: 'comment',
           name: 'serchComment',
-          // component: Comment,
           components:{
             moreto: Comment
           }
@@ -148,7 +137,6 @@ export default new Router({
         {
           path: 'singer',
           name: 'serchSinger',
-          // component: SingerDetail
           components:{
             moreto: SingerDetail
           }
@@ -156,24 +144,10 @@ export default new Router({
         {
           path: 'album',
           name: 'serchAlbum',
-          // component: Album
           components:{
             moreto: Album
           }
         },
-        // {
-        //   path: 'album',
-        //   name: 'album',
-        //   // component: Album
-        //   component: Album
-        // },
-        // {
-        //   path: 'singer',
-        //   name: 'singer',
-        //   // component: SingerDetail
-        //   component: SingerDetail
-          
-        // },
       ]
     },
   ]

@@ -4,8 +4,9 @@ export function getRecommend(){
   return axios.get("https://autumnfish.cn/banner?type=1")
 }
 
-export function getSongsheetList(){
-  return axios.get("https://autumnfish.cn/personalized?limit=8")
+export function getSongsheetList(num){
+  console.log(num)
+  return axios.get(`https://autumnfish.cn/personalized?limit=${num}`)
 }
 
 export function getNewSong(){

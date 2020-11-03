@@ -15,7 +15,7 @@
           <i class="share"></i>
         </div>
         <!-- 全屏内容区域 -->
-        <div class="contain" @click= "changeShow">
+        <div class="contain" @click.stop= "changeShow">
           <!-- 音量控制 -->
           <transition name="show">
             <div class="volume" v-if= "voc==true" v-show= "lrcShow">
@@ -29,6 +29,7 @@
               <img :src="currentSong.al.picUrl+'?param=130y130'" alt="" v-if="currentSong.al">
             </div>
           </transition>
+          <!-- 查看评论 -->
           <div class="info" v-show='!lrcShow' @click.stop='toComment'>评论</div>
           <!-- 歌词滚动 -->
             <bscroll :class="{'hidden-lrc':!lrcShow, lyric: true}" :bounce='false' :pos='scrollY' @scrollStart='scrollStart' @scrollEnd='scrollEnd'>
@@ -116,7 +117,7 @@ export default {
       voc: false,        //加载声音控制
       scrollY: 0,        //同步scroll纵坐标
       slide: false,       //触摸歌词滑动
-      // visibility: 'visibility:visible'
+      screenHeight: 0
     }
   },
   methods:{
@@ -126,36 +127,26 @@ export default {
         return
       }
       this.setFullScreen(!this.fullScreen)
-      console.log(this.fullScreen)
     },
     checkSinger(id){
-      // let type = window.location.hash.match(/[a-z]+?/g)[0]
-      console.log(id)
-      console.log(this.type)
-      // this.setFullScreen(!this.fullScreen) // 
-      // this.setFullScreen(!this.setFullScreen)
-      console.log(window.location.hash)
       if(window.location.hash == '#/singer'){
         this.setHiddenPlayer('visibility: hidden')
         return     
       }
       getSingerDetail(id).then((res)=>{
         this.setSinger(res.data.artist)
-
-            this.$router.push({
-              name:`${this.type}Singer`,
-              query: {
-                id: id
-              }
-            })
-
+        this.$router.push({
+          name:`${this.type}Singer`,
+          query: {
+            id: id
+          }
+        })
       setTimeout(()=>{
         this.setHiddenPlayer('visibility: hidden')
       },500)
       })
     },
     toComment(){
-      console.log(this.currentSong)
       getComment(this.currentSong.id).then((res)=>{
         //修改当前currentSong的数据 (基本数据)  这里只添加了评论
         setTimeout(()=>{
@@ -165,7 +156,9 @@ export default {
         this.setSong(this.currentSong)
         this.$router.push({
           name: `${this.type}Comment`,
-          params: this.currentSong.id
+          params: {
+            id: this.currentSong.id
+          }
         })
       })
     },
@@ -174,9 +167,8 @@ export default {
       if(this.audio.paused){
         this.audio.play()
         this.state='play'
-        console.log(this.timeIndex)
         this.scale = parseFloat((this.$refs.progress.width/(this.duration)).toFixed(2))
-        this.interval = this.timeinterval()
+        this.interval = this.timeInterval()
       }else{
         this.audio.pause()
         this.state='stop'
@@ -187,19 +179,17 @@ export default {
         for(let i=0; i<this.lrcTime.length; i++){
           if(this.audio.currentTime*1000>=this.lrcTime[i]&&this.audio.currentTime*1000<=this.lrcTime[i+1]){
           if(this.lrcIndex == i) return
-            // console.log(this.slide)
             for(let j=0; j<this.lrc.length; j++){      //清除其他歌词颜色
-              this.$refs.lrc.children[j].style.color = ''
+              this.$refs.lrc.children[j].style.color !== ''?this.$refs.lrc.children[j].style.color = '':null
             }
-
             this.$refs.lrc.children[i].style.color = '#fff'  //当前高亮
-            this.slide==false?this.scrollY = (200-this.$refs.lrc.children[i].offsetTop):null
+            this.slide==false?this.scrollY = (this.screenHeight*.27-this.$refs.lrc.children[i].offsetTop):null
             this.lrcIndex = i
             return
           }else if(this.audio.currentTime*1000>this.lrcTime.slice(-1)){  //最后一行歌词高亮
             if(this.lrcIndex == this.lrcTime.length-1) return
             for(let j=0; j<this.lrcTime.length-1; j++){      //清除其他歌词颜色
-              this.$refs.lrc.children[j].style.color = ''
+              this.$refs.lrc.children[j].style.color !== ''?this.$refs.lrc.children[j].style.color = '':null
             }
             this.$refs.lrc.children[this.lrcTime.length-1].style.color = '#fff'
             this.lrcIndex = this.lrcTime.length-1
@@ -207,7 +197,7 @@ export default {
         }
       }
     },
-    timeinterval(){   
+    timeInterval(){   
      return setInterval(()=>{
           this.timeIndex = Math.ceil(this.audio.currentTime)*1000
           this.index = this.scale + this.index
@@ -235,7 +225,7 @@ export default {
       this.index = +this.$refs.progress.dot.style.left.split('p')[0]
       if(this.audio.paused) return
       clearInterval(this.interval)
-      this.interval = this.timeinterval()
+      this.interval = this.timeInterval()
     },
     drag(e){
       this.toTurn = e
@@ -269,15 +259,12 @@ export default {
       }
       this.lrcShow = !this.lrcShow
       this.voc = true
-      console.log(this.voc)
     },
     prv(){
       if(this.currentIndex == 0) return
       this.changeSong(this.currentIndex-1)
     },
     next(){
-      console.log(this.currentIndex)
-      console.log(this.currentSong)
       if(this.currentIndex == this.playList.length-1) return
       this.changeSong(this.currentIndex+1)
     },
@@ -298,7 +285,6 @@ export default {
       let timeReg = /\[\d.+?\d\]/g  
       let timeRowReg = /\[\d.+?\d\].+/g
       let emptyRowReg = /\[[\d\D]{8,9}\][\n]/g
-      console.log(res)
       res.data.lrc.lyric = res.data.lrc.lyric.replace(emptyRowReg,'') //去掉无歌词的空行
       this.lrcTime = res.data.lrc.lyric.match(timeReg).map((item)=>{  //取出时间转化为毫秒
         item = item.slice(1,3)*60000+(+item.slice(4,6)*1000)+(+item.slice(7,9))
@@ -330,7 +316,6 @@ export default {
       if(!res.data.tlyric.lyric){  //无翻译时
         this.lrc = this.lrc.map((item,index)=>{  //将歌词内容中时间去掉 返回内容
           let empty = []
-          // console.log(lrcConArr[index])
           lrcConArr[index]?empty[0]= lrcConArr[index].replace(/\[.+\]/g,''):null
           return empty
         })
@@ -338,12 +323,10 @@ export default {
       }else{                        //有翻译
         let tArr = res.data.tlyric.lyric.match(timeReg)   //取出时间点
         let tConArr = res.data.tlyric.lyric.match(/\[\d.+?\d\].*/g)  //匹配每一行歌词内容[02:10:12]...
-        // let tConArr = res.data.tlyric.lyric.match(/(?<=\]).+?/g)
         tArr = tArr.map((item,index)=>{       //创建 时间,翻译 数组
           let empty = []
           empty[0]= item
           empty[1]= tConArr[index].replace(emptyRowReg,'').replace(/\[.+\]/g,'')
-          // empty[1]= tConArr[index].replace(/[\n]/g,'')
           return empty
         })
         this.lrc = this.lrc.map((item,index)=>{   //创建 原歌词的(时间,歌词) 数组
@@ -368,21 +351,15 @@ export default {
   computed:{
     ...mapGetters(['fullScreen','playList','currentSong','currentIndex','type','visibility']),
   },
-  created(){
-    console.log(this.currentSong)
-  },
   mounted(){
     this.audio = document.getElementsByTagName('audio')[0]
     this.audio.volume = .1
-    // this.$nextTick(()=>{this.voc = true})
-    
+    this.screenHeight = window.screen.height
   },
   watch:{
     currentSong: function (){
       let reg = /\[[\d\D]+?\]/g
-      console.log(this.currentSong)
       getSongUrl(this.currentSong.id).then((res)=>{
-        console.log(this.currentSong.id)
         getLrc(this.currentSong.id).then((res)=>{
           this.setLrc(res)
         })
@@ -541,8 +518,8 @@ export default {
               // flex-wrap wrap
               // align-content center
               text-align center
-              line-height 20px
-              padding 15px 0
+              line-height 4vh
+              padding 1vh 0
               // margin-bottom 15px
               // p
               //   width 100%

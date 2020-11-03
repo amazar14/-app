@@ -68,27 +68,27 @@ export default {
     }
   },
   methods:{
-    changePageStart(e){
-      let {pageX:startX, pageY:startY} = e.changedTouches[0]
-      console.log(startX,startY)
-      let that = this
-      function position(e){
-        let {pageX:endX,pageY:endY} = e.changedTouches[0]
-        let [slipX,slipY] = [endX-startX, endY-startY]
-        if(slipX<-100){
-          that.$router.push({
-            path:'/serch'
-          })
-        }else if(slipX>100){
-          that.$router.push({
-            path:'/singer'
-          })
-        }
-        that.$refs.rank.removeEventListener('touchend',position,false)
-      }
-      console.dir(this.$refs.rank)
-      this.$refs.rank.addEventListener('touchend',position,false)
-    },
+    // changePageStart(e){
+    //   let {pageX:startX, pageY:startY} = e.changedTouches[0]
+    //   console.log(startX,startY)
+    //   let that = this
+    //   function position(e){
+    //     let {pageX:endX,pageY:endY} = e.changedTouches[0]
+    //     let [slipX,slipY] = [endX-startX, endY-startY]
+    //     if(slipX<-100){
+    //       that.$router.push({
+    //         path:'/serch'
+    //       })
+    //     }else if(slipX>100){
+    //       that.$router.push({
+    //         path:'/singer'
+    //       })
+    //     }
+    //     that.$refs.rank.removeEventListener('touchend',position,false)
+    //   }
+    //   console.dir(this.$refs.rank)
+    //   this.$refs.rank.addEventListener('touchend',position,false)
+    // },
     send(id,name){
       this.$router.push({     //跳转到singerDetail 展示排行榜单
         path: `/rank/${id}`,   // 歌单id
@@ -108,14 +108,12 @@ export default {
     })
   },
   created(){
-    console.log('enternenternern')
     rank().then(res=>{
-      console.log(res)
       this.list = res.data.list.splice(0,4)
       this.recommendList = res.data.list.splice(0,6)
       this.globalList = res.data.list.splice(0,6)
       this.moreList = res.data.list
-      console.log(res)}),
+    })
     this.setType('rank')
   },
   components:{
@@ -152,11 +150,11 @@ export default {
             position absolute
             bottom 5px
             left 2px
-            font-size 12px
+            font-size 2vw
             transform scale(0.9,0.9)
           ul
             margin-left 10px
-            font-size 14px
+            font-size 2vh
             color #bbb
             display flex
             flex-direction column
@@ -187,7 +185,7 @@ export default {
             p
               font-size 3vw
               margin-top 5px
-              line-height 16px
+              line-height 2vh
               width 25vw
     .slide-enter-active, .slide-leave-active
       transition all 0.3s

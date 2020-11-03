@@ -38,12 +38,9 @@
         getSingerList(this.index).then((res)=>{
           this.singerList.push(...res.data.artists);
           this.index += 10;
-          console.log("歌手:", this.singerList)
         })
       },
-      select(e){
-        console.dir(this.singerList[e.target.dataset.index])
-        console.dir(e.target)
+      select(e){  //选中跳转歌手
         let singer = this.singerList[e.target.dataset.index||e.target.parentElement.dataset.index]
         this.$router.push({
           path: `/singer/${singer.id}`,
@@ -83,17 +80,17 @@
       font-size $font-size-medium-x
       color $color-theme-d
       & li
-        padding-left 10px
+        padding-left 1vh
       .singer-list-item
-        padding 5px
+        padding .5vh
         & img
-          width 60px
-          height 60px
+          width 8vh
+          height 8vh
           border-radius 50%
         & span
           position absolute
-          left 80px
-          line-height 60px
+          left 11vh
+          line-height 8vh
         &:nth-child(even)
           background-color rgba(0,0,0,.4)
     .slide-enter-active, .slide-leave-active

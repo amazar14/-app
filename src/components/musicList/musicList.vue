@@ -139,13 +139,8 @@ export default {
   },
   methods:{
     back(){
-      console.log(this.$props.bgImage)
       this.$router.go(-1)
       this.setHiddenPlayer('visibility: visible')
-      // this.$router.back()
-      console.log(this.$route.query)
-      // this.setFullScreen(true)
-      console.log(this.fullScreen)
     },
     // select(song,index){
     //   console.log(song,index)
@@ -157,17 +152,14 @@ export default {
     //    })
     // },
     select(e){
-      console.dir(e.path[0].dataset.index)
       // console.log(document.elementsFromPoint(e.clientX, e.clientY))
       let index = e.target.dataset.index     //点击的序号
-      console.log(this.list)
       this.selectPlay({
         list: this.list?this.list:this.rank,
         index
       })
     },
     more(id){   //歌曲id
-      console.log(id)
       this.mark = id //存储歌曲id 传到more组件中
       this.moreShow = true
     },
@@ -194,16 +186,7 @@ export default {
       return new Date(this.description.publishTime).toLocaleDateString().replace(/[\/]/g,'.')
     }
   },
-  created(){
-    console.log(this.sheet)
-    console.log(this.authSheet)
-  },
   watch:{
-    bgImage: function(){
-      // this.$props.bgImage = this.$props.bgImage+'?param=400y400'
-    },
-    description:{
-    },
     posY(){
         let pos = Math.max(this.posY,-200)
         this.$refs.pic.style.transform = `translateY(${pos}px)`

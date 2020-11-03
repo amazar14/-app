@@ -19,11 +19,11 @@
           <keep-alive>
             <ul>
               <li v-for= "(item,index) in songSheets" @click='showSheet(item.id)' :key='index'>
-                <a href="javascript:;">
+
                   <span><i></i>{{item.playCount.toString().length >=9 ? (item.playCount/100000000).toFixed(2)+"亿" : (item.playCount/10000).toFixed(2)+"万"}}</span>
                   <img width="50" height="50" :title= 'item.name' :src= "item.picUrl" alt="">
                   <p>{{item.name}}</p>
-                </a>
+
               </li>
             </ul>
           </keep-alive>
@@ -131,8 +131,10 @@
       }
     },
     created() {
+      console.log(document.body.scrollWidth)
+      document.body.scrollWidth>500?this._getSongsheetList(8):this._getSongsheetList(6)
       this._getRcommend(),
-      this._getSongsheetList()
+      // this._getSongsheetList(8)
       this._getNewSong()
       this._getNewAlbum()
       this.setType('recommend')
@@ -147,10 +149,10 @@
     },
     methods: {
       _getRcommend(){
-        getRecommend().then((res)=>{this.recommends = res.data.banners;console.log(this.recommends)})
+        getRecommend().then((res)=>{this.recommends = res.data.banners})
       },
-      _getSongsheetList(){
-        getSongsheetList().then((res)=>{this.songSheets = res.data.result;console.log(this.songSheets)})
+      _getSongsheetList(num){
+        getSongsheetList(num).then((res)=>{this.songSheets = res.data.result;})
       },
       _getNewSong(){
         getNewSong().then((res)=>{
@@ -165,7 +167,6 @@
         })
       },
       showSheet(id){
-        console.log(id)
         this.$nextTick(()=>{
           this.$router.push({
             path: `/recommend/sheet`,
@@ -183,14 +184,14 @@
         })
       },
       showAlbum(id){
-        this.$nextTick(()=>{
+        // this.$nextTick(()=>{
           this.$router.push({
             name: `recommendAlbum`,
             params: {
               id: id
             }
           })
-        })
+        // })
       },
       ...mapMutations({
         setType: 'SET_TYPE'
@@ -233,7 +234,7 @@
           right 5%
           border-radius 5px 0 5px 0
           padding 5px
-          font-size 14px
+          font-size 2vh
           display inline-block
           color #fff
       .recommend-list
@@ -250,17 +251,24 @@
           height 100%
           flex-wrap wrap
           justify-content space-evenly
+
           li
             position relative           
-            width 100px
-            margin 5px 0
+            min-width 14vh
+            max-width 30vw
+            height 16vh
+            margin 0 0 5vh 0
+            padding 0 1vh
+            box-sizing border-box
+            
             img
-              width 100%
-              height 100px
+              width 14vh
+              height 14vh 
               border-radius 8px
             p
-              font-size 12px
-              line-height 16px
+              width 14vh
+              font-size 1.5vh
+              line-height 2vh
               color #cfcfcf
               padding-top 3px
               display -webkit-box
@@ -277,17 +285,17 @@
               position absolute
               right 0
               color white
-              font-size  .3rem
-              margin 5px
+              font-size 1vw
+              margin 1vh 2vh
       .new-song-recommend
         margin-top 3vh
         padding 0 2vh 0 2vh
         .title
-          font-size 18px  
+          font-size 4vw  
           color #aeaeae
           margin-bottom 2vh
           .date
-            font-size 14px
+            font-size 2vh
             margin-bottom 1vh
           .light
             color #fff

@@ -1,7 +1,6 @@
 import * as types from './mutation-types'
 
 export const selectPlay = function({commit,state},{list,index}){
-  console.log(state)
   commit(types.SET_SEQUENCELIST, list)
   commit(types.SET_PLAYLIST, list)
   commit(types.SET_CURRENTINDEX, index)

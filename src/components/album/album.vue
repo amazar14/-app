@@ -50,36 +50,28 @@ export default {                        //需要路由传进需要查询的 id
         default: null
       },
       show: false,
-      showList: false
+      showList: false,
     }
   },
   methods:{
     _getAlbum(){
+      console.log(this.$route.params.id)
       getAlbum(this.$route.params.id).then((res)=>{
         this.list = res.data.songs
         this.description = res.data.album
-        console.log(this.list)
-        console.log(this.description)
         this.showList = true
-        // this.$nextTick(()=>{
           this.$refs.album.style.background = `url(${this.description.blurPicUrl}) 0 0 no-repeat`
-        // })
       })
     },
     _getSheet(){
-      console.log('check info')
       getSheet(this.$route.query.ids).then((res)=>{
-        console.log(res)
         let nickname = res.data.playlist.creator.nickname
         if(nickname == '网易云音乐'||nickname == '原创君'){
-          console.log(res.data.playlist.creator.nickname)
           this.authSheet = res.data.playlist
           this.list = res.data.playlist.tracks
-          console.log('auth')
         }else{
           this.sheet = res.data.playlist
           this.list = res.data.playlist.tracks
-          console.log('sheet')
         }
         this.showList = true
       })
@@ -90,11 +82,7 @@ export default {                        //需要路由传进需要查询的 id
     scroll
   },
   created(){
-    console.log('album')
     this.$route.query.type == 'sheet'?this._getSheet():this._getAlbum() 
-  },
-  mounted(){
-    console.log('专辑加载完')
   }
 }
 </script>

@@ -44,7 +44,8 @@ export default {
       let currentPage = this.pageName.indexOf(window.location.hash)
       let {pageX:endX,pageY:endY} = e.changedTouches[0]
       let [slipX,slipY] = [endX-this.startX, endY-this.startY]
-      if(slipY/slipX>0.2||slipY/slipX<-0.2) return
+      // if(slipY/slipX>0.2||slipY/slipX<-0.2) return
+      if(Math.abs(slipY/slipX)>.2) return
       if(currentPage >= 0&&this.startX !== null){
         if(slipX<-60){
           this.$router.push({

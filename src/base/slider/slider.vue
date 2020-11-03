@@ -32,7 +32,7 @@ export default {
   mounted (){
 
     this.$nextTick(()=>{
-      console.log(this.pure)
+
       let mySwiper = new Swiper(".swiper-container",{
         loop: this.show,
         pagination: {
@@ -51,18 +51,13 @@ export default {
         observeParents:true,
       })
       !this.pure? mySwiper.autoplay.running = false :null
-      console.log(mySwiper)
       
     })
 
     
   },
   created(){
-    console.log(this.pure)
     this.show = this.pure
-  },
-  destroyed(){
-    console.log('销毁了')
   }
 
 }

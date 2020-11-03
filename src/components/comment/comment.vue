@@ -63,22 +63,20 @@
 <script>
 //vuex获取moreSelect评论(总数)、歌曲信息
 //路由传入歌曲id 用于上拉加载更多的评论
-
-
 import {getComment} from '../../api/comment'
 import scroll from '../../base/scroll/bscroll'
 import {mapGetters,mapMutations} from 'vuex'
 export default {                
   data(){
     return{
-      index: 0,
+      index: 10,
       comments:[],
       date:[]
     }
   },
   methods:{
-
     _getComment(){        //上拉加载更多 每次加载20条
+    console.log(this.$route)
       getComment(this.$route.params.id,this.index).then(
         (res)=>{
           this.comments.push(...res.data.comments)
@@ -98,7 +96,6 @@ export default {
         if(duration<60000){
           comment[index].time1 = '刚刚'
         }else if(duration<3600000){
-          // console.log(Math.floor((now.getTime()-item.time)/60000))
           comment[index].time1 = `${Math.floor((now.getTime()-item.time)/60000)}分钟前`
           now.getHours()!==timed[0]?comment[index].time1 = `${now.getMinutes()-timed[1]+60}分钟前`:
           comment[index].time1 = `${now.getMinutes()-timed[1]}分钟前`
@@ -112,7 +109,6 @@ export default {
     },
     
     back(){
-      // this.$router.go(-1)
       this.$router.back()
       this.setHiddenPlayer('visibility: visible')
     },
@@ -121,32 +117,11 @@ export default {
     })
   },
   computed:{
-    
     ...mapGetters(['comment','song','singer']),  //vuex中取出 热评等数据
-    
   },
   created(){ 
-    // this.$nextTick(()=>{
-
         this.time(this.comment.hotComments)  //整理时间
-        // this._getComment()
         this.comment.hotComments.length<1?this._getComment():null//上拉加载的评论
-        console.log('loadddddddddddd')
-        console.log(this.$route.params)
-        // this._getComment()
-        // alert('none')
-    // })
-    
-  },
-  activated(){
-    console.log('dsaad')
-  },
-  watch:{
-    // comment: function(){
-    //   console.log('12300-----------')
-    //   this.comments = Object.assign({},this.comment.comments)
-    //   this.time(this.comments)
-    // },
   },
   components:{
     scroll

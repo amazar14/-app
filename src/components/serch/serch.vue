@@ -28,6 +28,7 @@
             </span>
             <span class='score'>{{item.score}}</span>         
           </li>
+          <li v-show='currentIndex>-1'></li>
         </ul>
       <!-- <serchResult class='serch-result' v-show='serch!==0':result='serch' :multimatch='serchMultimatch'></serchResult> -->
       </div>
@@ -41,7 +42,7 @@ import {getSerchHot, getSerch, getSerchDetail} from '../../api/serch'
 import {suggestSearch, defaultSearch} from '../../api/suggestSearch'
 import scroll from '../../base/scroll/bscroll'
 import serchResult from './serchResult'
-import {mapMutations} from 'vuex'
+import {mapMutations,mapGetters} from 'vuex'
 export default {
   data(){
     return{
@@ -72,16 +73,6 @@ export default {
       this.content = ''
       this.suggestList = []
     },
-
-    // send(word){
-    //   console.log(word)
-    //   typeof word =='object'?word ='':this.content =word
-    //   this.content==''?this.content=this.hotContent:
-    //   getSerch(this.content).then((res)=>{this.serchMultimatch = res.data.result;console.log(res.data)})
-    //   getSerchDetail(this.content).then((res)=>{this.serch = res.data.result.songs;console.log(res.data.result.songs)})
-    //   this.$refs.input.blur()
-    // },
-
     send(e,keyword){
       keyword?this.content = keyword:null
       if(this.content ==''&&e.target.dataset.index>=0){                 //热搜歌曲播放
@@ -89,15 +80,14 @@ export default {
         typeof word =='object'?word ='':this.content =word
       }
       this.content==''?this.content=this.hotContent:
-      getSerch(this.content).then((res)=>{this.serchMultimatch = res.data.result;console.log(res.data)})
-      getSerchDetail(this.content).then((res)=>{this.serch = res.data.result.songs;console.log(res.data.result.songs)})
+      getSerch(this.content).then((res)=>{this.serchMultimatch = res.data.result;})  //拉取多重匹配
+      getSerchDetail(this.content).then((res)=>{this.serch = res.data.result.songs})  //获取搜索单曲列表
       this.$refs.input.blur()
     },
 
     loadMore(){                               //上拉加载
       getSerchDetail(this.content, 20, 20).then((res)=>{
         this.serch.push(...res.data.result.songs)
-        console.log(this.content)
       })
     },
 
@@ -110,7 +100,6 @@ export default {
     suggest(){                              //搜索建议提示
       this.content.trim()==''?null:
       suggestSearch(this.content.trim()).then((res)=>{
-        console.log(res)
         if(res.data.result.allMatch==undefined) return
         this.suggestList = res.data.result.allMatch
       })
@@ -119,11 +108,11 @@ export default {
       setType: 'SET_TYPE'
     })
   },
+  computed:{
+    ...mapGetters(['currentIndex'])
+  },
   created(){
-    getSerchHot().then((res)=>{this.serchHot = res.data.data;console.log(this.serchHot)})
-    console.log(this.serch)
-    console.log(this.content)
-    console.log(this.suggestList)
+    getSerchHot().then((res)=>{this.serchHot = res.data.data})  //拉取热搜
     this.setType('serch')
   },
   mounted(){
@@ -131,12 +120,6 @@ export default {
       this.hotContent = res.data.data.realkeyword   //搜索框 placeholder热搜
       this.$refs.input.placeholder = res.data.data.showKeyword
     })
-  },
-  activated (){
-    console.log('ACTIVED')
-  },
-  deactivated(){
-    console.log('deactivated')
   },
   watch: {
     content: function(){
@@ -162,7 +145,7 @@ export default {
     overflow hidden
     .serch-bar
       padding 20px 0
-      font-size 18px
+      font-size 2.5vh
       color #818181
       display flex
       flex-wrap wrap
@@ -205,7 +188,7 @@ export default {
         width 76%
         background-color #0e1118
         color #fff
-        font-size 16px
+        font-size 2vh
         .content
           color #91cae6
           padding 0 15px
@@ -226,11 +209,11 @@ export default {
             background-size contain
     p
       line-height 40px
-      font-size 16px
+      font-size 3vh
       margin-left 20px
       margin 20px 0 0 20px
     .list
-      font-size 16px
+      font-size 2vh
       height 82%
       overflow hidden
       .hot-list
@@ -252,9 +235,9 @@ export default {
           justify-content space-evenly
           pointer-events none
           span:nth-child(1)
-            font-size 16px
+            font-size 2.2vh
           span:nth-child(2)
-            font-size 12px
+            font-size 1.9vh
             color #999
           img
             height 15px

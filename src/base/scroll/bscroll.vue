@@ -40,13 +40,8 @@
     },
     mounted (){
       setTimeout(()=>{
-        console.log('定时器')
         this._initScroll()
       },20)
-      // this.$nextTick(()=>{
-      //   console.log('next延迟')
-      //   this._initScroll()
-      // })
     },
     methods:{
       _initScroll (){     //创建 better-scroll 实例
@@ -77,11 +72,6 @@
         })
         this.scroll.on("pullingUp",()=>{
           if(this.$props.upLoad) this.$props.upLoad()
-          console.log('shangla gengxin')
-          this.$nextTick(()=>{
-            // this.scroll.refresh()
-          })
-
           this.scroll.finishPullUp()
         })
 
