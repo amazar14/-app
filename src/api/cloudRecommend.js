@@ -5,7 +5,6 @@ export function getRecommend(){
 }
 
 export function getSongsheetList(num){
-  console.log(num)
   return axios.get(`https://autumnfish.cn/personalized?limit=${num}`)
 }
 
